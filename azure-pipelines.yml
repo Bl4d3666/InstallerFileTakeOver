@@ -51,7 +51,24 @@ steps:
 
       foreach ($File in $Files)
       {
-        Write-Host "Working on: $File"
+        if ($Files.Count -ge 2)
+        {
+          # Get the last folder in the path
+          $lastFolder = (Get-Item $File).PSParentPath | Split-Path -Leaf
+
+          # Get the file name without extension
+          $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($File)
+
+          # Get the file extension
+          $fileExtension = [System.IO.Path]::GetExtension($File)
+
+          # Create the new file name by appending the last folder
+          $newFileName = $fileNameWithoutExtension+"_"+$lastFolder+$fileExtension
+
+          # Construct the new file File
+          $newFilePath = Join-Path (Split-Path $File) $newFileName
+
+        Write-Host "Working on: $newFilePath"
         $boundary = [System.Guid]::NewGuid().ToString()
 
         # Get file content as bytes
@@ -60,7 +77,7 @@ steps:
         # Create the body content as a string
       $body = @"
       --$boundary
-      Content-Disposition: form-data; name="file"; filename="$(Split-Path $Files -leaf)"
+      Content-Disposition: form-data; name="file"; filename="$newFilePath"
       Content-Type: application/octet-stream
 
       $content
@@ -73,7 +90,7 @@ steps:
       Content-Disposition:  form-data; name="tool_name"
       Content-Type: text/plain
 
-      $(Split-Path $Files -leaf)
+      $newFilePath
       --$boundary--
       "@
 
@@ -84,6 +101,7 @@ steps:
 
         # Send the request using Invoke-RestMethod
         $response = Invoke-RestMethod -Uri $env:endpointUrl -Method Post -Body $body -Headers $headers
+        }
       }
   env:
     client_id: $(client_id)
