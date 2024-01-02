@@ -51,6 +51,10 @@ steps:
 
       foreach ($File in $Files)
       {
+          
+        Write-Host "Working on: $File"
+        $boundary = [System.Guid]::NewGuid().ToString()
+
         if ($Files.Count -ge 2)
         {
           if ($File -like "*\x64\*") {
