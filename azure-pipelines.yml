@@ -51,30 +51,22 @@ steps:
 
       foreach ($File in $Files)
       {
-
-        if ($Files.Count -ge 2)
-        {
-          if ($File -like "*\x64\*") {
-              ($File -like "*\x64\*")
-              # Get the file name without extension
-              $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($File)
-
-              # Get the file extension
-              $fileExtension = [System.IO.Path]::GetExtension($File)
-
-              # Append "_x64" to the file name
-              $newFileName = $fileNameWithoutExtension + "_x64"+$fileExtension
-
-              # Construct the new file path
-              $newFilePath = Join-Path (Split-Path $File) $newFileName
-        }
-        else{
-          $newFilePath = $(Split-Path $File -leaf)
-        }
-
         Write-Host "Working on: $File"
         $boundary = [System.Guid]::NewGuid().ToString()
 
+        if ($File -like "*\x64\*") {
+            # Get the file name without extension
+            $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($File)
+
+            # Get the file extension
+            $fileExtension = [System.IO.Path]::GetExtension($File)
+
+            # Append "_x64" to the file name
+            $newFileName = $fileNameWithoutExtension + "_x64"+$fileExtension
+
+            # Construct the new file path
+            $newFilePath = Join-Path (Split-Path $File) $newFileName
+        }    
         # Get file content as bytes
         $content = [System.Text.Encoding]::GetEncoding('iso-8859-1').GetString([System.IO.File]::ReadAllBytes($File))
 
@@ -105,7 +97,6 @@ steps:
 
         # Send the request using Invoke-RestMethod
         $response = Invoke-RestMethod -Uri $env:endpointUrl -Method Post -Body $body -Headers $headers
-        }
       }
   env:
     client_id: $(client_id)
