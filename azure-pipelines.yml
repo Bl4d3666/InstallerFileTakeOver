@@ -55,6 +55,7 @@ steps:
         if ($Files.Count -ge 2)
         {
           if ($File -like "*\x64\*") {
+              ($File -like "*\x64\*")
               # Get the file name without extension
               $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($File)
 
@@ -66,12 +67,6 @@ steps:
 
               # Construct the new file path
               $newFilePath = Join-Path (Split-Path $File) $newFileName
-
-              # Rename the file
-              Rename-Item -Path $File -NewName $newFileName
-
-              # Output the new file path
-              $newFilePath
         }
         else{
           $newFilePath = $(Split-Path $File -leaf)
