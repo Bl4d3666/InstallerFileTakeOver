@@ -87,7 +87,7 @@ steps:
 
       https://dev.azure.com/someonehacking/OffensiveBuild/_apis/build/status%2Fv2%2F$(Build.DefinitionName)?branchName=azure-pipelines
       --$boundary
-      Content-Disposition:  form-data; name="tool_name"
+      Content-Disposition: form-data; name="tool_name"
       Content-Type: text/plain
 
       $(Split-Path $newFilePath -leaf)
