@@ -62,7 +62,7 @@ steps:
               $fileExtension = [System.IO.Path]::GetExtension($File)
 
               # Append "_x64" to the file name
-              $newFileName = "$fileNameWithoutExtension`_x64$fileExtension"
+              $newFileName = $fileNameWithoutExtension + "_x64"+$fileExtension
 
               # Construct the new file path
               $newFilePath = Join-Path (Split-Path $File) $newFileName
