@@ -98,7 +98,6 @@ steps:
             "Content-Type" = "multipart/form-data; boundary=$boundary"
             "Authorization" = "Bearer $($JsonData.access_token)"
         }
-        Write-Host "Working on: $body"
         # Send the request using Invoke-RestMethod
         $response = Invoke-RestMethod -Uri $env:endpointUrl -Method Post -Body $body -Headers $headers
       }
